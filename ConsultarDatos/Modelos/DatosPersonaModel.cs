@@ -1,4 +1,4 @@
-﻿namespace ConsultarDatos.Modelos.ResponseApi
+﻿namespace ConsultarDatos.Modelos
 {
     public class DatosPersonaModel
     {
