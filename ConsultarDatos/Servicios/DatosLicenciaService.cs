@@ -1,5 +1,5 @@
 ﻿using ConsultarDatos.Config;
-using ConsultarDatos.Modelos;
+using ConsultarDatos.Modelos.DTOs;
 using ConsultarDatos.Modelos.ResponsesApisExternas;
 using ConsultarDatos.Servicios.Interfaces;
 using Microsoft.Extensions.Options;
@@ -43,7 +43,7 @@ namespace ConsultarDatos.Servicios
                 if (licenciaResponse.IsSuccessStatusCode)
                 {
                     var licenciaString = await licenciaResponse.Content.ReadAsStringAsync();
-                    var licJson = JObject.Parse(licenciaString);
+                     var licJson = JObject.Parse(licenciaString);
                     var retorno = licJson.SelectToken("S:Envelope.S:Body.ns0:consultarLicenciaResponse.return");
 
                     if (retorno?["resultado"]?["exito"]?.ToString() == "S")
@@ -92,7 +92,7 @@ namespace ConsultarDatos.Servicios
                             foreach (var licenciaItem in listaLicencias)
                             {
                                 // Creación de la licencia individual (Similar a tu bloque `if (listaLicencias.Count > 0)`)
-                                var datosLicencia = new DatosLicenciaConducir
+                                var datosLicencia = new DatosLicenciaConducirDto
                                 {
                                     // Datos específicos de la licencia
                                     TipoLicencia = licenciaItem?["tipo"]?.ToString(),
@@ -114,7 +114,7 @@ namespace ConsultarDatos.Servicios
                         else
                         {
                             // en caso sin licencias pero con datos de contacto" (Similar a tu bloque `else`)
-                            var datosContactoUnico = new DatosLicenciaConducir
+                            var datosContactoUnico = new DatosLicenciaConducirDto
                             {
                                 Email = wrapper.Email,
                                 Telefono = wrapper.Telefono,

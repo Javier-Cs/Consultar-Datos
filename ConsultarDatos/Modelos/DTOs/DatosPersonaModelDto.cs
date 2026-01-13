@@ -1,6 +1,6 @@
-﻿namespace ConsultarDatos.Modelos
+﻿namespace ConsultarDatos.Modelos.DTOs
 {
-    public class DatosPersonaModel
+    public class DatosPersonaModelDto
     {
         public string? Cedula { get; set; }
         public string? Nombre { get; set; }
@@ -21,7 +21,7 @@
         public string? Instruccion { get; set; }
         public string? Profesion { get; set; }
         public string? Condicion { get; set; }
-        public List<DatosLicenciaConducir> licenciasDeConducir { get; set; } = new List<DatosLicenciaConducir>();
+        public List<DatosLicenciaConducirDto> licenciasDeConducir { get; set; } = new List<DatosLicenciaConducirDto>();
 
     }
 }

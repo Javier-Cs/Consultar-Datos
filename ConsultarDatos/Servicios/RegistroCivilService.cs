@@ -22,7 +22,7 @@ namespace ConsultarDatos.Servicios
 
         public async Task<(ResponseRegistroCivilExter? DatosPersona, string? ErrorMessage)> ObtenerInformacionDatosPersona(string Cedula)
         {
-            if (_apiConfig.Equals(""))
+            if (string.IsNullOrWhiteSpace(_apiConfig.urlApiRestRegistriCivil))
             {
                 return (null, "Error en la url de registro CVl");
             }
@@ -53,7 +53,7 @@ namespace ConsultarDatos.Servicios
 
                 //deserializacion al modelo
                 var rcData = data.ToObject<ResponseRegistroCivilExter>();
-                Cedula = rcData.NUI;
+                //Cedula = rcData.NUI;
                 return (rcData, null);
 
             }

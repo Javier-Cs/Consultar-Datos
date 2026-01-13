@@ -1,6 +1,6 @@
-﻿namespace ConsultarDatos.Modelos
+﻿namespace ConsultarDatos.Modelos.DTOs
 {
-    public class DatosLicenciaConducir
+    public class DatosLicenciaConducirDto
     {
         // COLUMNAS PARA LICENCIA
         public string? Email { get; set; }

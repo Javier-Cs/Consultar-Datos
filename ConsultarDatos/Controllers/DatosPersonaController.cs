@@ -1,7 +1,7 @@
-﻿using ConsultarDatos.Modelos;
+﻿
+using ConsultarDatos.Modelos.DTOs;
 using ConsultarDatos.Servicios.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace ConsultarDatos.Controllers
 {
@@ -45,7 +45,7 @@ namespace ConsultarDatos.Controllers
 
             // MAPEANDO AL MODELO FINAL (ConsultaPersona) ---
 
-            var persona = new DatosPersonaModel
+            var persona = new DatosPersonaModelDto
             {
                 // Mapeo directo de Registro Civil
                 Cedula = rcData.NUI,
@@ -73,7 +73,7 @@ namespace ConsultarDatos.Controllers
 
                 // Datos de auditoría
                 FechaConsulta = DateTime.UtcNow,
-                FechaExpira = DateTime.Today // Manteniendo tu lógica original
+                FechaExpira = DateTime.Today 
             };
 
             return Ok(persona);
@@ -84,15 +84,8 @@ namespace ConsultarDatos.Controllers
         {
             var direcciones = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            // rcCalle viene de data["Calle"] y licDir viene de ubicacion?["direccion"]
             if (!string.IsNullOrWhiteSpace(rcCalle)) direcciones.Add(rcCalle.Trim());
             if (!string.IsNullOrWhiteSpace(licDir)) direcciones.Add(licDir.Trim());
-
-            // Tu lógica original también usaba "data["Domicilio"]" (LugarDomicilio), "retorno?.SelectToken("datos.datos.datosMAP.direccionDomicilio")" y "retorno?["direccion"]"
-            // Si necesitas esos, deben ser pasados como argumentos o extraídos en el servicio.
-
-            // Si quieres recrear EXACTAMENTE tu lógica original con las 4 fuentes, necesitas ajustar el LicenciasService para que el wrapper las contenga todas.
-            // Por simplicidad, aquí solo consolidamos las que vienen directamente de RC y del wrapper de Licencias.
 
             return string.Join("; ", direcciones.Where(d => !string.IsNullOrWhiteSpace(d)));
         }
@@ -101,7 +94,6 @@ namespace ConsultarDatos.Controllers
         {
             var profesiones = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            // rcProf viene de data["Profesion"] y licProf viene de datosGen?["profesion"]
             if (!string.IsNullOrWhiteSpace(rcProf)) profesiones.Add(rcProf.Trim());
             if (!string.IsNullOrWhiteSpace(licProf)) profesiones.Add(licProf.Trim());
 
@@ -109,3 +101,7 @@ namespace ConsultarDatos.Controllers
         }
     }
 }
+
+
+//okay esta es primera version del api 
+//cómo debería hacer si quiero implementar cambios para mejorar el rendimiento y la estructura de los servicios y el controlador y establecerlo como otra version de la api?

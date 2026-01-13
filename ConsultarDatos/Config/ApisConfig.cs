@@ -2,7 +2,7 @@
 {
     public class ApisConfig
     {
-        public string urlApiRestRegistriCivil {  get; set; } = string.Empty;
-        public string urlApiSOAPLicencias {  get; set; } = string.Empty;
+        public Uri urlApiRestRegistriCivil {  get; init; } = null;
+        public Uri urlApiSOAPLicencias {  get; init; } = null;
     }
 }

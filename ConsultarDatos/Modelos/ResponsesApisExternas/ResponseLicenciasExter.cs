@@ -1,8 +1,10 @@
-﻿namespace ConsultarDatos.Modelos.ResponsesApisExternas
+﻿using ConsultarDatos.Modelos.DTOs;
+
+namespace ConsultarDatos.Modelos.ResponsesApisExternas
 {
     public class ResponseLicenciasExter
     {
-        public List<DatosLicenciaConducir> Licencias { get; set; } = new List<DatosLicenciaConducir>();
+        public List<DatosLicenciaConducirDto> Licencias { get; set; } = new List<DatosLicenciaConducirDto>();
         public string? TipoSangre { get; set; }
         public string? Email { get; set; }
         public string? Telefono { get; set; }
