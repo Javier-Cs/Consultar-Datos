@@ -2,7 +2,7 @@
 {
     public class ApisConfig
     {
-        public string RegistroCivil {  get; set; } = string.Empty;
-        public string Licencias {  get; set; } = string.Empty;
+        public string urlApiRestRegistriCivil {  get; set; } = string.Empty;
+        public string urlApiSOAPLicencias {  get; set; } = string.Empty;
     }
 }

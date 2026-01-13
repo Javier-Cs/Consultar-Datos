@@ -2,27 +2,26 @@
 {
     public class DatosPersonaModel
     {
-        public string? Cedula {  get; set; }
+        public string? Cedula { get; set; }
         public string? Nombre { get; set; }
-        public DateTime? FechaNacimiento {  get; set; }
+        public DateTime? FechaNacimiento { get; set; }
         public string? EstadoCivil { get; set; }
-        public string? Conyugue { get; set; }
-        public DateTime? FechaCedulacion {  get; set; }
-        public string? LugarDomicilio {  get; set; }
-        public string? CalleDomiciliop {  get; set; }
-        public string? NumeroDomicilio {  get; set; }
-        public string? NombresMadre {  get; set; }
-        public string? NombresPadre {  get; set; }
-        public string? LugarNacimiento {  get; set; }
-        public DateTime? FechaConsulta {  get; set; }
-        public DateTime? FechaExpiracion {  get; set; }
-        public string? Genero {  get; set; }
-        public string? Nacionalidad {  get; set; }
-        public string? Instruccion {  get; set; }
-        public string? ProfecionActual {  get; set; }
-        public string? condicion {  get; set; }
-
-        public List<DatosLicenciaConducir> DatosDeLicenciaDeConducir { get; set; } = new List<DatosLicenciaConducir>();
+        public string? Conyuge { get; set; }
+        public DateTime? FechaCedulacion { get; set; }
+        public string? LugarDomicilio { get; set; }
+        public string? CalleDomicilio { get; set; }
+        public string? NumeracionDomicilio { get; set; }
+        public string? NombreMadre { get; set; }
+        public string? NombrePadre { get; set; }
+        public string? LugarNacimiento { get; set; }
+        public DateTime FechaConsulta { get; set; }
+        public DateTime FechaExpira { get; set; }
+        public string? Genero { get; set; }
+        public string? Nacionalidad { get; set; }
+        public string? Instruccion { get; set; }
+        public string? Profesion { get; set; }
+        public string? Condicion { get; set; }
+        public List<DatosLicenciaConducir> licenciasDeConducir { get; set; } = new List<DatosLicenciaConducir>();
 
     }
 }

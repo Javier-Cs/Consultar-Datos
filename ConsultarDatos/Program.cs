@@ -1,3 +1,4 @@
+using ConsultarDatos.Config;
 using ConsultarDatos.Servicios;
 using ConsultarDatos.Servicios.Interfaces;
 
@@ -7,9 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.Configure<ApisConfig>(
+    builder.Configuration.GetSection("Apis"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<IRegistroCivilService, RegistroCivilService>();
+
 
 var app = builder.Build();
 
