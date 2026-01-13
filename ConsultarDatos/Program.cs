@@ -13,6 +13,7 @@ builder.Services.Configure<ApisConfig>(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<IRegistroCivilService, RegistroCivilService>();
+builder.Services.AddHttpClient<IDatosLicenciaService, DatosLicenciaService>();
 
 
 var app = builder.Build();

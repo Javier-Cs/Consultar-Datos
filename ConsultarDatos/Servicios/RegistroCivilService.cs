@@ -26,7 +26,7 @@ namespace ConsultarDatos.Servicios
             {
                 return (null, "Error en la url de registro CVl");
             }
-            var urlRegisCivil = _apiConfig.urlApiRestRegistriCivil + "/" + Cedula;
+            var urlRegisCivil = _apiConfig.urlApiRestRegistriCivil  + Cedula;
 
             try { 
                 var response = await _httpClient.GetAsync(urlRegisCivil);
