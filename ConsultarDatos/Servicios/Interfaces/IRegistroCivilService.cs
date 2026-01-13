@@ -5,6 +5,6 @@ namespace ConsultarDatos.Servicios.Interfaces
 {
     public interface IRegistroCivilService
     {
-        Task<(ResponseRegistroCivilExter? DatosPersona, string? ErrorMessage)> ObtenerInformacionDatosPersona(string Cedula);
+        Task<(ResponseRegistroCivilExter? DatosPersona, string? ErrorMessage)> ObtenerInformacionDatosPersona(string Cedula, CancellationToken tc = default);
     }
 }

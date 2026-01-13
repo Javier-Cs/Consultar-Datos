@@ -103,5 +103,3 @@ namespace ConsultarDatos.Controllers
 }
 
 
-//okay esta es primera version del api 
-//cómo debería hacer si quiero implementar cambios para mejorar el rendimiento y la estructura de los servicios y el controlador y establecerlo como otra version de la api?

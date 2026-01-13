@@ -20,5 +20,6 @@
         public string? Profesion { get; set; }
         public string? CondicionCedulado { get; set; } // Condicion
         public string? FechaInscripcionDefuncion { get; set; } // Para consolidación
+        public string? Error { get; set; } = string.Empty;
     }
 }
