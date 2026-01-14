@@ -73,7 +73,7 @@ namespace ConsultarDatos.Servicios
                         apiResponseBody.message ??
                         "Error desconocido del API de Registro Civil";
 
-                    return (null, mensajeError);
+                    return (apiResponseBody.response, mensajeError);
 
                     //string? codigoError = null;
                     //if (apiResponseBody is JObject dataObject && dataObject["return"] is JObject retornos && retornos["CodigoError"] != null) { 

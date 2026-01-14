@@ -1,6 +1,7 @@
 using ConsultarDatos.Config;
 using ConsultarDatos.Servicios;
 using ConsultarDatos.Servicios.Interfaces;
+using ConsultarDatos.Serviciosm;
 
 var builder = WebApplication.CreateBuilder(args);
 
