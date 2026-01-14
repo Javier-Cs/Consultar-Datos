@@ -2,12 +2,10 @@
 using ConsultarDatos.Modelos.DTOs;
 using ConsultarDatos.Modelos.ResponsesApisExternas;
 using ConsultarDatos.Servicios.Interfaces;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
-using System.Text.Json.Nodes;
 
 namespace ConsultarDatos.Serviciosm
 {
@@ -51,7 +49,7 @@ namespace ConsultarDatos.Serviciosm
                     return wrapper;
                 }
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                var responseString = await response.Content.ReadAsStringAsync(ct);
                 var licJson = JObject.Parse(responseString);
                 var retorno = licJson.SelectToken("S:Envelope.S:Body.ns0:consultarLicenciaResponse.return");
 
@@ -65,8 +63,12 @@ namespace ConsultarDatos.Serviciosm
                 MapearLicencias(retorno["licencias"], wrapper);
 
             }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(e,"Se canceló la operación de busqueda de datos de la identificación {cedula}",cedula);
+            }
             catch (Exception ex) {
-                _logger.LogError("Error al solicitar información de la licencia para cédula {cedula}", cedula);
+                _logger.LogError(ex, "Error al solicitar información de la licencia para cédula {cedula}", cedula);
             }
 
             return wrapper;
@@ -90,7 +92,7 @@ namespace ConsultarDatos.Serviciosm
 
 
         private static void MapearDatosGenerales(JToken retorno, ResponseLicenciasExter wrapper){
-            var datosGen = retorno.SelectToken("datos.datos.datosgen");
+            var datosGen = retorno.SelectToken("datos.datos.datosGen");
             var ubicacion = retorno.SelectToken("datos.datos.ubicacion");
 
             wrapper.TipoSangre =

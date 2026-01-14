@@ -1,18 +1,37 @@
+using Asp.Versioning;
 using ConsultarDatos.Config;
 using ConsultarDatos.Servicios;
 using ConsultarDatos.Servicios.Interfaces;
 using ConsultarDatos.Serviciosm;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.Configure<ApisConfig>(
-    builder.Configuration.GetSection("Apis"));
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.Configure<ApisConfig>(builder.Configuration.GetSection("Apis"));
+
+
+
+builder.Services.AddApiVersioning( options => 
+{
+    options.DefaultApiVersion = new ApiVersion(1,0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+}); 
+
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddHttpClient<IRegistroCivilService, RegistroCivilService>();
 builder.Services.AddHttpClient<IDatosLicenciaService, DatosLicenciaService>();
 
@@ -27,9 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

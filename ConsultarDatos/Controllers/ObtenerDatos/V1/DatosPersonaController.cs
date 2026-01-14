@@ -1,12 +1,15 @@
 ﻿
+using Asp.Versioning;
 using ConsultarDatos.Modelos.DTOs;
 using ConsultarDatos.Servicios.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ConsultarDatos.Controllers
+namespace ConsultarDatos.Controllers.ObtenerDatos.V1
 {
     [ApiController]
-    [Route("Api/v1/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("Api/v{version:apiVersion}/[controller]")]
+    //[Route("Api/v1/[controller]")]
     public class DatosPersonaController : ControllerBase
     {
         private readonly IRegistroCivilService _registroServic;

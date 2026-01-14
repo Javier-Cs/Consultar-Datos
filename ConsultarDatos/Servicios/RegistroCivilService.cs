@@ -28,16 +28,6 @@ namespace ConsultarDatos.Servicios
         public async Task<(ResponseRegistroCivilExter? DatosPersona, string? ErrorMessage)> ObtenerInformacionDatosPersona(string Cedula, CancellationToken ct = default)
         {
 
-
-            // ESTO LO PODEMOS IMPLEMENTAR EN EL CONTROLADOR
-
-            //if (_apiConfig.urlApiRestRegistriCivil == null)
-            //{
-            //    return (null, "Error en la url de registro CVl");
-            //}
-            ////var urlRegisCivil = _apiConfig.urlApiRestRegistriCivil  + Cedula;
-            //var urlRegisCivil = new Uri(_apiConfig.urlApiRestRegistriCivil,Cedula);
-
             try { 
                 var response = await _httpClient.GetAsync(Cedula, ct);
                 if (!response.IsSuccessStatusCode) {
@@ -46,14 +36,8 @@ namespace ConsultarDatos.Servicios
 
                 var jsonString = await response.Content.ReadAsStringAsync(ct);
 
-                // parseo de la respuesta de la api a mi nmodelo
-                //var json = JObject.Parse(jsonString); 
-                //var status = (int?)json["status"];
-                //var data = json["response"];
-
                 var apiResponseBody = JsonConvert.DeserializeObject<RegistroCivilApiRespuestaBody>(jsonString);
 
-                //bool datosInavlidos = status != 1 || data == null || data["CodigoError"]?.ToString() != "000" || data["NUI"] == null;
 
                 if (apiResponseBody == null)
                 {
@@ -74,21 +58,8 @@ namespace ConsultarDatos.Servicios
                         "Error desconocido del API de Registro Civil";
 
                     return (apiResponseBody.response, mensajeError);
-
-                    //string? codigoError = null;
-                    //if (apiResponseBody is JObject dataObject && dataObject["return"] is JObject retornos && retornos["CodigoError"] != null) { 
-                    //    codigoError = retornos["CodigoError"]!.ToString();
-                    //}
-
-                    //string mensajeError = apiResponseBody.response.Error?.ToString() ??
-                    //    (json["message"]?.ToString() + " (" + codigoError + " )") ??
-                    //    "Error desconocido del Api RC";
-                    //return (null, mensajeError);
                 }
 
-                //deserializacion al modelo
-                //var rcData = apiResponseBody.ToObject<ResponseRegistroCivilExter>();
-                //Cedula = rcData.NUI;
                 var persona = apiResponseBody.response;
                 return (persona, null);
 
