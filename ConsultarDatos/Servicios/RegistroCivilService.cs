@@ -1,6 +1,7 @@
 ﻿using ConsultarDatos.Config;
 using ConsultarDatos.Modelos;
 using ConsultarDatos.Modelos.ResponsesApisExternas;
+using ConsultarDatos.Modelos.ResponsesApisExternas.RegistroCivil;
 using ConsultarDatos.Servicios.Interfaces;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

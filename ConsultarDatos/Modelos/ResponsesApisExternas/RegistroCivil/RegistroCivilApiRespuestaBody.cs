@@ -1,4 +1,4 @@
-﻿namespace ConsultarDatos.Modelos.ResponsesApisExternas
+﻿namespace ConsultarDatos.Modelos.ResponsesApisExternas.RegistroCivil
 {
     public class RegistroCivilApiRespuestaBody
     {

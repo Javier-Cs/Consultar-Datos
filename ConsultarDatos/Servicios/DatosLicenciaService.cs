@@ -1,6 +1,7 @@
 ﻿using ConsultarDatos.Config;
 using ConsultarDatos.Modelos.DTOs;
 using ConsultarDatos.Modelos.ResponsesApisExternas;
+using ConsultarDatos.Modelos.ResponsesApisExternas.Licencias;
 using ConsultarDatos.Servicios.Interfaces;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -26,16 +27,6 @@ namespace ConsultarDatos.Serviciosm
         public async Task<ResponseLicenciasExter> ConsultarDatosLicencia(string cedula, CancellationToken ct = default)
         {
             var wrapper = new ResponseLicenciasExter();
-
-            //var licenciaRequest = new { 
-            //    model = new { idIdentificacion = "CED", identificacion= cedula, idPersona = "" },
-            //    code = "consultarLicencia",
-            //    identificacion = cedula
-            //};
-
-
-            //var licenciaJson = JsonConvert.SerializeObject(licenciaRequest);
-            //var licenciaContent = new StringContent(licenciaJson, Encoding.UTF8, "application/json");
 
             try
             {
@@ -65,9 +56,53 @@ namespace ConsultarDatos.Serviciosm
             }
             catch (OperationCanceledException e)
             {
-                _logger.LogWarning(e,"Se canceló la operación de busqueda de datos de la identificación {cedula}",cedula);
+                _logger.LogWarning(e, "Se canceló la operación de busqueda de datos de la identificación {cedula}", cedula);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al solicitar información de la licencia para cédula {cedula}", cedula);
+            }
+
+            return wrapper;
+        }
+
+
+        public async Task<ResponseLicenciasExterV2> ConsultarDatosLicenciav2(string cedula, CancellationToken ct = default)
+        {
+            var wrapper = new ResponseLicenciasExterV2();
+
+            try
+            {
+                var content = CreateResponseSOAP(cedula);
+
+                var response = await _httpClient.PostAsync("", content, ct);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("Licencias respondió {StatusCode} para cédula {Cedula}", response.StatusCode, cedula);
+                    return wrapper;
+                }
+
+                var responseString = await response.Content.ReadAsStringAsync(ct);
+                var licJson = JObject.Parse(responseString);
+                var retorno = licJson.SelectToken("S:Envelope.S:Body.ns0:consultarLicenciaResponse.return");
+
+                if (retorno == null)
+                    return wrapper;
+
+                if (retorno?["resultado"]?["exito"]?.ToString() != "S")
+                    return wrapper;
+
+                MapearDatosGeneralesV2(retorno, wrapper);
+                MapearLicenciasV2(retorno["licencias"], wrapper);
+
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(e, "Se canceló la operación de busqueda de datos de la identificación {cedula}", cedula);
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "Error al solicitar información de la licencia para cédula {cedula}", cedula);
             }
 
@@ -129,7 +164,8 @@ namespace ConsultarDatos.Serviciosm
 
             if (listaLicencias.Count == 0)
             {
-                var contacto = new DatosLicenciaConducirDto {
+                var contacto = new DatosLicenciaConducir
+                {
                     Email = wrapper.Email,
                     Telefono = wrapper.Telefono,
                     Celular = wrapper.Celular,
@@ -148,7 +184,108 @@ namespace ConsultarDatos.Serviciosm
 
             foreach (var item in listaLicencias)
             {
-                var licencia = new DatosLicenciaConducirDto 
+                var licencia = new DatosLicenciaConducir
+                {
+                    TipoLicencia = item?["tipo"]?.ToString(),
+                    LicenciaFechaDesde = item?["fechaDesde"]?.ToString(),
+                    LicenciaFechaHasta = item?["fechaHasta"]?.ToString(),
+
+                    Email = wrapper.Email,
+                    Telefono = wrapper.Telefono,
+                    Celular = wrapper.Celular,
+                    TipoSangre = wrapper.TipoSangre,
+                    FechaDefuncion = wrapper.FechaDefuncion,
+                    LugarDefuncion = wrapper.LugarDefuncion,
+                    MotivoDefuncion = wrapper.MotivoDefuncion
+                };
+                wrapper.Licencias.Add(licencia);
+            }
+
+        }
+
+
+
+
+
+
+
+        // V2
+
+        private static void MapearDatosGeneralesV2(JToken retorno, ResponseLicenciasExterV2 wrapper)
+        {
+            var datosGen = retorno.SelectToken("datos.datos.datosGen");
+            var ubicacion = retorno.SelectToken("datos.datos.ubicacion");
+            var bloqueos = retorno.SelectToken("datos.datos.datosMAP");
+
+            wrapper.TipoSangre =
+                retorno?["tipoSangre"]?.ToString() ??
+                retorno?.SelectToken("datos.datos.datosMAP.tipoSangre")?.ToString();
+
+            wrapper.Profesion =
+                datosGen?["profesion"]?.ToString();
+            wrapper.Email =
+                retorno?["email"]?.ToString() ??
+                ubicacion?["email"]?.ToString();
+
+            wrapper.Celular =
+                ubicacion?["celular"]?.ToString() ??
+                retorno?["celular"]?.ToString();
+
+            wrapper.Telefono = ubicacion?["telefono"]?.ToString();
+            wrapper.DireccionUbicacion = ubicacion?["direccion"]?.ToString();
+            wrapper.LugarDefuncion = datosGen?["lugarDefuncion"]?.ToString();
+            wrapper.MotivoDefuncion = datosGen?["motivoDefuncion"]?.ToString();
+
+            var fechaDefuncion = datosGen?["fechaDefuncion"]?.ToString();
+            if (!string.IsNullOrWhiteSpace(fechaDefuncion) && DateTime.TryParse(fechaDefuncion, out var fechaDef))
+            {
+                wrapper.FechaDefuncion = fechaDef;
+            }
+
+            wrapper.Discapacidad = bloqueos?["discapacidad"]?.ToString();
+
+            var fechaMatrimonio = bloqueos?["fechaMatrimonio"]?.ToString();
+            if (!string.IsNullOrWhiteSpace(fechaMatrimonio) && DateTime.TryParse(fechaMatrimonio, out var fechaMartirio)) {
+                wrapper.FechaMatrimonio = fechaMartirio;
+            }
+            wrapper.Ocupacion = bloqueos?["ocupacion"]?.ToString();
+
+            wrapper.Puntos = retorno["puntos"]?.ToString();
+
+
+        }
+
+
+        private static void MapearLicenciasV2(JToken? licenciasToken, ResponseLicenciasExterV2 wrapper)
+        {
+            JArray listaLicencias =
+                licenciasToken as JArray ??
+                (licenciasToken is JObject obj ? new JArray(obj) : new JArray());
+
+            if (listaLicencias.Count == 0)
+            {
+                var contacto = new DatosLicenciaConducir
+                {
+                    Email = wrapper.Email,
+                    Telefono = wrapper.Telefono,
+                    Celular = wrapper.Celular,
+                    TipoSangre = wrapper.TipoSangre,
+                    FechaDefuncion = wrapper.FechaDefuncion,
+                    LugarDefuncion = wrapper.LugarDefuncion,
+                    MotivoDefuncion = wrapper.MotivoDefuncion
+                };
+
+                if (!string.IsNullOrWhiteSpace(contacto.Email) || !string.IsNullOrWhiteSpace(contacto.Telefono) || contacto.FechaDefuncion.HasValue)
+                {
+                    wrapper.Licencias.Add(contacto);
+                }
+
+                return;
+            }
+
+            foreach (var item in listaLicencias)
+            {
+                var licencia = new DatosLicenciaConducir
                 {
                     TipoLicencia = item?["tipo"]?.ToString(),
                     LicenciaFechaDesde = item?["fechaDesde"]?.ToString(),
@@ -169,3 +306,4 @@ namespace ConsultarDatos.Serviciosm
 
     }
 }
+

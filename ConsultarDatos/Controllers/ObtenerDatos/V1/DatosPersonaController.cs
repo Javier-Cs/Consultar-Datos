@@ -8,7 +8,7 @@ namespace ConsultarDatos.Controllers.ObtenerDatos.V1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("Api/v{version:apiVersion}/[controller]")]
+    [Route("Api/v{version:apiVersion}/ConsultarDatos")]
     //[Route("Api/v1/[controller]")]
     public class DatosPersonaController : ControllerBase
     {
@@ -47,6 +47,22 @@ namespace ConsultarDatos.Controllers.ObtenerDatos.V1
             string profesionConsolidada = ConsolidarProfesiones(rcData.Profesion, licenciaData.Profesion);
 
             // MAPEANDO AL MODELO FINAL (ConsultaPersona) ---
+            var licenciasDto = licenciaData.Licencias
+            .Select(l => new DatosLicenciaConducirDto
+            {
+                Email = l.Email,
+                Telefono = l.Telefono,
+                Celular = l.Celular,
+                TipoLicencia = l.TipoLicencia,
+                LicenciaFechaDesde = l.LicenciaFechaDesde,
+                LicenciaFechaHasta = l.LicenciaFechaHasta,
+                TipoSangre = l.TipoSangre,
+                FechaDefuncion = l.FechaDefuncion,
+                LugarDefuncion = l.LugarDefuncion,
+                MotivoDefuncion = l.MotivoDefuncion
+            })
+            .ToList();
+
 
             var persona = new DatosPersonaModelDto
             {
@@ -72,7 +88,7 @@ namespace ConsultarDatos.Controllers.ObtenerDatos.V1
                 Profesion = profesionConsolidada,
 
                 // Asignación de la lista completa de licencias (del LicenciaWrapper)
-                licenciasDeConducir = licenciaData.Licencias,
+                licenciasDeConducir = licenciasDto,
 
                 // Datos de auditoría
                 FechaConsulta = DateTime.UtcNow,

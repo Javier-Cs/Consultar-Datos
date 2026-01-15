@@ -1,10 +1,10 @@
 ﻿using ConsultarDatos.Modelos.DTOs;
 
-namespace ConsultarDatos.Modelos.ResponsesApisExternas
+namespace ConsultarDatos.Modelos.ResponsesApisExternas.Licencias
 {
     public class ResponseLicenciasExter
     {
-        public List<DatosLicenciaConducirDto> Licencias { get; set; } = new List<DatosLicenciaConducirDto>();
+        public List<DatosLicenciaConducir> Licencias { get; set; } = new List<DatosLicenciaConducir>();
         public string? TipoSangre { get; set; }
         public string? Email { get; set; }
         public string? Telefono { get; set; }

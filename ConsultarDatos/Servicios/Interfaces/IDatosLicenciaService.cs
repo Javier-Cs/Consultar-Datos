@@ -1,4 +1,4 @@
-﻿using ConsultarDatos.Modelos.ResponsesApisExternas;
+﻿using ConsultarDatos.Modelos.ResponsesApisExternas.Licencias;
 
 namespace ConsultarDatos.Servicios.Interfaces
 {
