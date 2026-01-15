@@ -67,7 +67,7 @@ namespace ConsultarDatos.Serviciosm
         }
 
 
-        public async Task<ResponseLicenciasExterV2> ConsultarDatosLicenciav2(string cedula, CancellationToken ct = default)
+        public async Task<ResponseLicenciasExterV2> ConsultarDatosLicenciaV2(string cedula, CancellationToken ct = default)
         {
             var wrapper = new ResponseLicenciasExterV2();
 
@@ -108,6 +108,8 @@ namespace ConsultarDatos.Serviciosm
 
             return wrapper;
         }
+
+
 
         private static StringContent CreateResponseSOAP(string cedula)
         {
@@ -155,7 +157,6 @@ namespace ConsultarDatos.Serviciosm
                 wrapper.FechaDefuncion = fechaDef; 
             }
         }
-
 
         private static void MapearLicencias(JToken? licenciasToken, ResponseLicenciasExter wrapper) {
             JArray listaLicencias =
@@ -205,11 +206,7 @@ namespace ConsultarDatos.Serviciosm
 
 
 
-
-
-
-
-        // V2
+        // V2------------------------------
 
         private static void MapearDatosGeneralesV2(JToken retorno, ResponseLicenciasExterV2 wrapper)
         {
